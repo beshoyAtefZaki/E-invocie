@@ -1,0 +1,32 @@
+{% extends 'index.html'%}
+
+
+{% block content %}
+<h1>  Item list </h1>
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Item Code</th>
+        <th scope="col">Item Name</th>
+        <th scope="col">Arabic Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Stock</th>
+      </tr>
+    </thead>
+    <tbody>
+
+        {% for item in items %}
+        <tr>
+            <th scope="row"><a  href="{% url 'profile' %}">{{item.item_code}}</a>  </th>
+            <td> <a  href="{% url 'profile' %}"> {{item.item_name}} </a> </td>
+            <td>{{item.item_arabic_name}}</td>
+            <td>{{ item.pricelist_rate}}</td>
+            <td>{{ item.actual_qty }}</td>
+          </tr>
+        {% endfor  %}
+     
+     
+    </tbody>
+  </table>
+{% endblock %}

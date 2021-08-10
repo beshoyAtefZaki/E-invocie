@@ -1,0 +1,60 @@
+
+{% extends "index.html" %}
+
+{% block content %}
+<form method='POST' action="{% url 'profile' %}" >
+
+    {% csrf_token %}
+    <div calss ="row" > 
+        <div class="col-6 col-md-6">   
+    <div class="mb-3">
+      <label for="name" class="form-label">Profile Name</label>
+      <input type="text" required class="form-control" id="name"  value ='{{ profile.name }}' aria-describedby="namelHelp" name= 'name'>
+      <div id="namelHelp" class="form-text">You shoud add profile name as server name</div>
+    </div>
+    </div>
+    <div class='col-6' >
+        <div class="mb-3">
+            <label for="appkey" class="form-label">App Key</label>
+            <input type="text" required class="form-control" value ='{{ profile.appkey }}' id="appkey" aria-describedby="appkeyHelp" name= 'appkey'>
+            <div id="appkeyHelp" class="form-text">Server Key </div>
+          </div>
+    </div>
+    <div class='col-6' >
+        <div class="mb-3">
+            <label for="appsecret" class="form-label">App Secret</label>
+            <input type="text" required class="form-control" value ='{{ profile.appsecret }}' id="appsecret" aria-describedby="appsecretHelp" name= 'appsecret'>
+            <div id="appsecretHelp" class="form-text">Server Secret </div>
+          </div>
+    </div>
+    <div class='col-6' >
+        <div class="mb-3">
+            <label for="pricelist" class="form-label">POS Price List </label>
+            <input type="text" class="form-control" value ='{{ profile.pricelist }}' id="pricelistt" aria-describedby="pricelistHelp" name= 'pricelist'>
+            <div id="pricelistHelp" class="form-text">Server pricelist </div>
+          </div>
+    </div>
+
+    
+   
+
+    {% for group in groups %}
+     
+
+     <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="{{ group.name }}" name="{{ group.name }}">
+        <label class="form-check-label" for="{{ group.name }}">{{ group.name }}</label>
+      </div>
+    {% endfor %}
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    
+    </div>
+
+    <div class="row" >
+
+        
+    </div>
+  </form>
+
+  {% endblock %}

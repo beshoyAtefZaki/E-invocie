@@ -1,0 +1,374 @@
+{% extends 'index.html' %}
+
+
+{% block content %}
+
+<style>  
+
+:root {
+  --gradient: linear-gradient(to left top, #DD2476 10%, #FF512F 90%) !important;
+}
+
+body {
+  background: rgb(250, 245, 245) !important;
+}
+
+.card {
+  /* background: #222;
+  border: 1px solid #dd2476;
+  color: rgba(250, 250, 250, 0.8); */
+  margin-bottom: 2rem;
+}
+
+/* .btn {
+  border: 5px solid;
+  border-image-slice: 1;
+  background: var(--gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  border-image-source:  var(--gradient) !important; 
+  text-decoration: none;
+  transition: all .4s ease;
+}
+
+.btn:hover, .btn:focus {
+      background: var(--gradient) !important;
+  -webkit-background-clip: none !important;
+  -webkit-text-fill-color: #fff !important;
+  border: 5px solid #fff !important; 
+  box-shadow: #222 1px 0 10px;
+  text-decoration: underline;
+} */
+
+
+</style>
+<div class = "row">
+  
+<div class="col-md-9" >
+  <div class="row">
+    <div class="col -md-3">
+    <form  method="get"> 
+      <div class="input-group mb-3">
+        <!-- <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Enter Serial Number or name: </span>
+        </div> -->
+          <input class="form-control" type="customerID" id="search" placeholder="Name or serial" name="search" onchange="onchangeB()">
+        <div class="input-group-append">
+          <button class="btn btn-success" type="submit" onclick="onchangeB()">Serach &raquo;</button>
+        </div>
+      </div>
+  
+  </div>
+  <div class="col -md-3">
+    
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="basic-addon1">Item Group : </span>
+        </div>
+        
+        <!-- <select id="cars" name="carlist" form="carform" onchange="onchangeB()"> -->
+          <select class="form-select" aria-label="Default select example" id="name" onchange="onchangeB()">
+         
+            <option value="{{group}}">{{group}}</option>
+            <option value=" "> </option>
+            {% for group in item_group %}
+          <option value="{{group.name}}">{{group.name}}</option>
+          {% endfor %}
+
+        </select>
+         
+       
+      </div>
+    </form>
+  </div>
+  </div>
+
+    <div class="container mx-auto mt-4">
+      <div class="row">
+        
+      {% for item in items %}
+ 
+   <!-- <div class="col-md-3">  -->
+    <div class="col-md-4">
+    <div class="card" style="width: 18rem;">
+      <div class="row">
+        <div class="col-md-6">
+      <img src="https://i.imgur.com/ZTkt4I5.jpg" class="card-img-top" alt="..." >
+    </div>
+    <div class="col-md-6">
+      <br> 
+      <h5 class="card-title"> {{ item.item_code }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">{{ item.item_name }}</h6>
+    </div>
+    </div>
+      <div class="card-body">
+        <h6>  Price {{ item.pricelist_rate }}</h6>
+        <a>   Qty : {{item.actual_qty}}</a>
+        <p class="card-text">{{ item.description }}</p>
+
+        <div class="row">
+          <div class="col-md-6">
+            <form  method="post" action = "{% url 'edit_order' order.id %}"> 
+             
+                {% csrf_token %}
+              <input type="text" required class="form-control" value ='{{ item.id }}' hidden='true' id="appsecret" aria-describedby="appsecretHelp" name= 'item_id'></input>
+              
+              <button type ="submit" class ="btn btn-primary"> ADD</button>
+
+    
+            </form>
+          </div>
+          <div class="col-md-6">
+            {% for ex_iteem in order.items.all %}
+            {% if ex_iteem.item.id == item.id%}
+
+            <form method="post" , action="{% url 'remove'%}">  
+              {% csrf_token %}
+              <input name='orderid' hidden value='{{ order.id }}'>
+              <input name='lineid' hidden value='{{ ex_iteem.id }}' onchange="">
+              <button type ="submit" class ="btn btn-danger"> Remove </button>
+            </form>
+           
+            {% endif %}
+            {% endfor %}
+  
+          </div>
+
+        </div>
+          
+               
+     
+      </div>
+      </div>
+    </div>   
+
+      {% endfor %}
+      
+      </div>
+      
+    <!-- </div>
+
+    -->
+  
+<!--   
+      <div class="col-md-3" style="max-width: 18rem; min-width: 18rem; max-height: 14rem;min-height: 12rem;margin-top: 2;  margin-right: 1rem;" >
+        
+            
+              <div class="card" >
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.item_code }}</h5>
+                  <table class="table">
+                    <thead>
+                      <tr>
+                       
+                        <th scope="col">{{ item.item_name }}</th>
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                      
+                        <td>Price </td> <td> {{ item.pricelist_rate }} </td>
+                      </tr>
+                      <tr>
+                      
+                        <td>Available Qty  </td> <td> {{ item.actual_qty }} </td>
+                      </tr>
+                     <tr>  
+                       <td> </td>
+
+                      <td>
+                            
+              
+
+                      </td>
+                     </tr>
+                    </tbody>
+                  </table>
+                  <form  method="post" action = "{% url 'edit_order' order.id %}"> 
+                    <div class="mb-3">
+                      {% csrf_token %}
+                    <input type="text" required class="form-control" value ='{{ item.id }}' hidden='true' id="appsecret" aria-describedby="appsecretHelp" name= 'item_id'></input>
+                    </div>
+                    <button type ="submit" class ="btn-secondary"> ADD</button>
+  
+          
+                  </form>
+                  
+                      
+                  {% for ex_iteem in order.items.all %}
+                  {% if ex_iteem.item.id == item.id%}
+  
+                  <form method="post" , action="{% url 'remove'%}">  
+                    {% csrf_token %}
+                    <input name='orderid' hidden value='{{ order.id }}'>
+                    <input name='lineid' hidden value='{{ ex_iteem.id }}'>
+                    <button type ="submit" class ="btn-danger"> remove </button>
+                  </form>
+                 
+                  {% endif %}
+                  {% endfor %}
+                
+              
+               
+                 
+              
+                </div>
+               
+                
+              </div>
+            
+            
+        
+    
+    </div> -->
+
+      
+
+     
+     
+   
+  
+     </div>
+  
+ 
+
+</div>
+
+<div class="col-md-3" >
+  <div class="container" >
+    <div class="row" >
+      <div class="col md-3">
+    <button type="button" class="btn btn-secondary" data-bs-toggle="dropdown" aria-expanded="true"> Show Open Orders </button>
+    
+      <span class="visually-hidden">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">  
+       
+      {% for order_l in open_orders %}
+      {% if order_l.id != order.id %}
+      <li><a class="dropdown-item" href='{% url "edit_order" order_l.id %} '> order number : - {{ order_l.id }}
+
+        
+         
+        {% endif %}
+      </a>  
+      
+      </li>  
+      {% endfor %}
+    </ul>
+  </div>
+  </div>
+    </div>
+    
+    <div class="row">
+      
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title"> Order Number  {{ order.id }}</h5>
+              <table class="table">
+                <thead>
+                  <tr>
+                   
+                    <th scope="col">Item Code And Name</th>
+                    <th scope="col">unit Price </th>
+                    <th scope="col">total </th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  {% for line in order.items.all %}
+                  <tr onkeypress="cursor()">
+                  
+                    <td>{{ line.item.item_name }}</td>
+
+                    <td><input  class="form-control" value=" {{ line.qty }}" onchange="ChangeQty()" id="get_qty"/> </td>
+                    <td>{{ line.total }}</td>
+                  </tr>
+
+                  {% endfor %}
+                
+                 
+                </tbody>
+              </table>
+             <table> 
+               
+               <tbody>
+                 <tr>
+                   <td> Total : </td> <td> {{ order.total }} $</td>
+                 </tr>
+                 <tr> <td>Tax :</td> <td> {{ order.taxes }} $</td></tr>
+                 <tr> <td> Invocie Total  : </td> <td> {{ order.grandtotal }} $</td></tr>
+               </tbody>
+             </table>
+              
+                  
+            {% if order.orderstatus == 'Open' %}
+             <a href="{% url 'submit' order.id %}"  class="btn btn-success">Submit</a>  
+
+             {% endif %}
+          
+           
+             
+            <a href="{% url 'delete' order.id %}" class="btn btn-danger">Cancel</a>
+
+             
+           
+            
+            </div>
+          
+          </div>
+        
+        
+      </div>
+          
+
+     
+</div>
+
+
+
+</div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" > 
+function ChangeQty(){
+
+  var qty =  document.getElementById('get_value').value;
+  console.log(qty)
+}
+
+function cursor(){
+  console.log("cur")
+}
+function onchangeB(){
+  
+  var group =  document.getElementById('name')
+  var search =  document.getElementById('search').value;
+  var value = group.options[group.selectedIndex].value;
+  if (search ){
+    var url = '{% url "edit_order" order.id %}'+'?search=' +search +'&Home='+value
+    window.location.replace(url);
+  }
+  if(value && !search){
+    
+  var url = '{% url "edit_order" order.id %}'+'?Home=' +value 
+  window.location.replace(url);
+  }
+  
+  
+  // $.ajax({
+  //   type :"GET" ,
+  //   url :'{% url "edit_order" order.id %}' ,
+  //   data:{"Home" : value},
+  
+    
+
+  //   success:function(data){
+  //     console.log('Success')
+  //   }
+
+    
+  // })
+}
+</script>
+{% endblock %}

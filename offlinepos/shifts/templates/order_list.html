@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% block content %}
+{% if open_entry %}
+
+
+<h1>  Shift open Orders list </h1>
+{% else %}
+<h1> ALl Open Orders </h1>
+{% endif %}
+
+<table class="table">  
+
+
+
+    <thead class="thead-dark">
+        <tr>
+          <th scope="col">Order Number </th>
+          <th scope="col">total Amount</th>
+          <th scope="col">Open Entry </th>
+          <th scope="col">TAX</th>
+          <th scope="col">Grand Total </th>
+          <th scope="col">  </th>
+          <th scope="col">  </th>
+        </tr>
+      </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+          <th scope="row">  {% if order.orderstatus == 'Open' %} <a  href="{% url 'edit_order' order.id %}">{{order.id}}</a>
+            {% else %} {{ order.id }} {% endif %} </th>
+          <td> <a  href="{% url 'profile' %}"> {{order.items.count }} </a> </td>
+          <td>{{order.open_entry}}</td>
+          <td>{{ order.taxes}}</td>
+          <td>{{ order.total }}</td>
+
+          {% if order.orderstatus == 'Open' %}
+          <td> <a  class ='btn btn-secondary'href="{% url 'submit' order.id %}" > Submit </a></td>
+          <td> <a  class='btn btn-danger' href="{% url 'delete' order.id %}"  > Delete </a></td>
+          {% endif %}
+          
+          
+        </tr>
+      {% endfor  %}
+
+    </tbody>
+</table>
+
+
+{% endblock %}

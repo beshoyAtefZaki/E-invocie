@@ -1,0 +1,81 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="col-md-12" >
+    <div class="row">
+        
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title"> Order number : {{ order.id}}</h3>
+              <table class="table">
+                <thead>
+
+                    
+                  <tr>
+                   
+                    <th scope="col">Item Code And Name</th>
+                    <th scope="col">unit Price </th>
+                    <th scope="col"> QTY</th>
+                    <th scope="col">total </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {% for line in order.items.all %} 
+                     <form>
+                      <tr>
+                   
+                        <th scope="col"> {{ line.item.item_code }} : - {{ line.item.item_name }}</th>
+                        <th scope="col">{{ line.price}} </th>
+                        <th scope="col"> <input type="text" value={{line.qty}}> </input> </th>
+                        <th scope="col" id="{{line.id}}">{{ line.total }} </th>
+                        <th>
+                            <a href="#" class=" btn btn-danger">Remove</a>
+                        </th>
+                      </tr>
+                      </form>
+                    {% endfor %}
+                
+                 
+                </tbody>
+              </table>
+              <div class="row">
+                  <div class="col-md-6">
+                      <h4> Totals </h4>
+             <table class="table md-4"> 
+               
+               <tbody>
+                   <th scope="col">
+                 <tr>
+                   <td  scope="col"> Total : </td> <td> 1000 $</td>
+                 </tr>
+                 <tr> <td  scope="col">Tax :</td> <td> 140 $</td></tr>
+                 <tr> <td  scope="col"> Invocie Total  : </td> <td> 1140 $</td></tr>
+
+                 
+                 </th>
+                 <th> <a href="#" class="btn btn-secondary">Edit in Pos </a> </th>
+
+                 
+                
+               </tbody>
+             </table>
+              
+                  
+            
+             <a href="#" class="btn btn-success">Submit</a>  
+          
+           
+             
+            <a href="#" class="btn btn-danger">Delete</a>
+            </div>
+             </div>
+            </div>
+            
+            
+          </div>
+        
+        
+      </div>
+
+</div>
+
+{% endblock %}
