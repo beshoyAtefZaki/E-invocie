@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from django.views.decorators.http import require_http_methods
 import os
 from .models import *
-
+import subprocess
 # @api_view(['POST','GET'])
 # @require_http_methods(["GET", "POST"])
 @api_view(['POST','GET'])
@@ -16,12 +16,36 @@ def e_invoice_form(request):
         # print(request.data.get('documents'))
         for invoice in request.data.get('documents'):
             try :
-                os.remove('/home/beshoy/production/qbexpress/sFile.txt')
+                os.remove('C:/j/sFile.txt')
             except:pass
-            file = open('/home/beshoy/production/qbexpress/sFile.txt' , 'a' )
-            file.write(json.dumps(invoice) )
-            #EInovie_settinge
+            jsonfile = "C:/j/sFile.txt"
+            with open(jsonfile, 'a', encoding='utf-8') as outfile:
+                       json.dump(invoice, outfile )
+            #EInovie_setting
+            # e
+            cmd = 'C:/j/EInvoicingSigner.exe'
+            result = subprocess.Popen([cmd ,' '], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+            a,b = result.communicate()
+            print("succes" ,a)
+            print("Erro " ,b )
+            accepted_document = False
+            rejected = False
+            if a :
+               h = json.loads(a)
+               if h.get('submissionId') :
+                    accepted_document = h.get('submissionId') 
+                    
+               else :
+                  rejected = h.get('rejectedDocuments')[0].get('error').get('details')[0]
+                  
+                  
+            else :
+                rejected = str(b)
             ic_invoice = EInvoice()
+            if accepted_document :
+                ic_invoice.submissionId = accepted_document
+            if rejected :
+                ic_invoice.errro_log = rejected
             #set issuer data need to update to set default issuer data
             issuer                                   = invoice.get('issuer')
 
